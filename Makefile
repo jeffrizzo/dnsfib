@@ -3,10 +3,16 @@ OBJDIR:=obj
 TESTDIR:=tests
 #Q?=@
 
+# Append to flags in case we want to set from env.  Turn on
+# all warnings and make them errors.
+CFLAGS+= -Wall -Werror -Wextra
+CPPFLAGS+= 
+
 # where does the cmocka test library live?
 CMOCKA_BASE?=/opt/brew
-TEST_CFLAGS:= -I$(CMOCKA_BASE)/include
-TEST_CPPFLAGS:= -DUNIT_TESTING
+
+TEST_CFLAGS:= $(CFLAGS) -Wno-unused-parameter
+TEST_CPPFLAGS:= -DUNIT_TESTING -I$(CMOCKA_BASE)/include $(CPPFLAGS)
 TEST_LFLAGS:= -L$(CMOCKA_BASE)/lib -lcmocka
 
 BIN:= prog
