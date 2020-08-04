@@ -19,9 +19,12 @@
 
 #include <arpa/inet.h>
 
+#include "dnspkt.h"
+
 uint8_t pktbuf[512];
 
 #ifdef UNIT_TESTING
+/* when we're testing, only run through the loop once */
 int test_loops = 1;
 #define FOREVER() test_loops--
 #else
@@ -53,6 +56,16 @@ void packet_loop(int sock)
         if (recvd < 0) {
             err(1, "recvfrom");
         }
+
+        if (recvd < DNSPKT_HEADER_SIZE) {
+            fprintf(stderr, "header too short, ignoring\n");
+            continue;
+        }
+
+        printf("ID: %u FLAGS: %04X QDCOUNT: %u ANCOUNT: %u NSCOUNT: %u ARCOUNT: %u\n",
+            dnspkt_get_id(pktbuf), dnspkt_get_flags(pktbuf), dnspkt_get_qdcount(pktbuf),
+            dnspkt_get_ancount(pktbuf), dnspkt_get_nscount(pktbuf), dnspkt_get_arcount(pktbuf));
         debug_dump("<in", pktbuf, recvd);
+
     }
 }
