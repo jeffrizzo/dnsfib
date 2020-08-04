@@ -6,7 +6,7 @@ TESTDIR:=tests
 # Append to flags in case we want to set from env.  Turn on
 # all warnings and make them errors.
 CFLAGS+= -Wall -Werror -Wextra
-CPPFLAGS+= 
+CPPFLAGS+=
 
 # where does the cmocka test library live?
 CMOCKA_BASE?=/opt/brew
@@ -24,11 +24,11 @@ TEST:= $(wildcard $(TESTDIR)/*.c)
 $(BIN): $(OBJ)
 	@echo LINK: $@
 	$(Q)$(CC) -o $@ $(OBJ)
-	
+
 # Unit tests built with cmocka support.  We remove the test binaries after running
 # the tests to keep things tidy.
 .PHONY: test
-test: test_main test_mysocket test_packet_loop test_dnspkt
+test: test_main test_mysocket test_dnspkt
 
 .PHONY: test_main
 test_main: $(TESTDIR)/test_main.c $(SRCDIR)/main.c
@@ -41,12 +41,6 @@ test_mysocket: $(TESTDIR)/test_mysocket.c $(SRCDIR)/mysocket.c
 	$(Q)$(CC) $(TEST_CFLAGS) $(TEST_CPPFLAGS) $< -o $(TESTDIR)/test_mysocket $(TEST_LFLAGS)
 	-$(TESTDIR)/test_mysocket
 	-@rm -f $(TESTDIR)/test_mysocket
-
-.PHONY: test_packet_loop
-test_packet_loop: $(TESTDIR)/test_packet_loop.c $(SRCDIR)/packet_loop.c
-	$(Q)$(CC) $(TEST_CFLAGS) $(TEST_CPPFLAGS) $< -o $(TESTDIR)/test_packet_loop $(TEST_LFLAGS)
-	-$(TESTDIR)/test_packet_loop
-	-@rm -f $(TESTDIR)/test_packet_loop
 
 .PHONY: test_dnspkt
 test_dnspkt: $(TESTDIR)/test_dnspkt.c $(SRCDIR)/dnspkt.h
