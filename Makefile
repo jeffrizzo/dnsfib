@@ -28,13 +28,25 @@ $(BIN): $(OBJ)
 # Unit tests built with cmocka support.  We remove the test binaries after running
 # the tests to keep things tidy.
 .PHONY: test
-test: test_main
+test: test_main test_mysocket test_packet_loop
 
 .PHONY: test_main
 test_main: $(TESTDIR)/test_main.c $(SRCDIR)/main.c
 	$(Q)$(CC) $(TEST_CFLAGS) $(TEST_CPPFLAGS) $< -o $(TESTDIR)/test_main $(TEST_LFLAGS)
 	-$(TESTDIR)/test_main
 	-@rm -f $(TESTDIR)/test_main
+
+.PHONY: test_mysocket
+test_mysocket: $(TESTDIR)/test_mysocket.c $(SRCDIR)/mysocket.c
+	$(Q)$(CC) $(TEST_CFLAGS) $(TEST_CPPFLAGS) $< -o $(TESTDIR)/test_mysocket $(TEST_LFLAGS)
+	-$(TESTDIR)/test_mysocket
+	-@rm -f $(TESTDIR)/test_mysocket
+
+.PHONY: test_packet_loop
+test_packet_loop: $(TESTDIR)/test_packet_loop.c $(SRCDIR)/packet_loop.c
+	$(Q)$(CC) $(TEST_CFLAGS) $(TEST_CPPFLAGS) $< -o $(TESTDIR)/test_packet_loop $(TEST_LFLAGS)
+	-$(TESTDIR)/test_packet_loop
+	-@rm -f $(TESTDIR)/test_packet_loop
 
 .PHONY: clean
 clean:
