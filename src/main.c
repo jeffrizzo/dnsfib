@@ -127,7 +127,7 @@ int MAIN(int argc, char *argv[])
       case 'a':
         if (*optarg == '\0')
           usage(argv[0]);
-        strlcpy(address_string, optarg, sizeof(address_string));
+        strncpy(address_string, optarg, sizeof(address_string));
         int res;
         if ((res = inet_addr(address_string)) < 0) {
           fprintf(stderr, "bad ip address %s\n", address_string);
