@@ -12,5 +12,6 @@
 #include <stdint.h>
 
 ssize_t handle(uint8_t *, ssize_t);
+extern char address_string[];
 
 #endif

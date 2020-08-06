@@ -5,7 +5,7 @@
 #include <cmocka.h>
 
 /* mock functions */
-
+char address_string[50] = "1.2.3.4"; /* normally lives in main.c */
 /* include the code under test */
 #include "../src/handle.c"
 

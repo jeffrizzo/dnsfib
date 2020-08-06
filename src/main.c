@@ -8,6 +8,7 @@
 #include <stdio.h>
 #include <unistd.h>
 #include <stdbool.h>
+#include <string.h>
 
 #ifndef UNIT_TESTING
 #include <stdlib.h>
@@ -30,6 +31,7 @@
 #include "dnspkt.h"
 
 uint8_t pktbuf[DNSPKT_MAX_SIZE];
+char address_string[50] = "1.2.3.4"; /* default reply; changeable on commandline */
 
 #ifdef UNIT_TESTING
 /* when we're testing, only run through the loop once */
@@ -103,9 +105,10 @@ void packet_loop(int sock)
 
 void usage(const char *progname)
 {
-  fprintf(stderr, "Usage: %s [-h] [-p port] [-n num]\n", progname);
-  fprintf(stderr, " -p <port>  listen on a different port (default 53)\n");
+  fprintf(stderr, "Usage: %s [-h] [-a address] [-p port] [-n num]\n", progname);
+  fprintf(stderr, " -a <ipaddress> Use <ipaddress> in replies\n");
   fprintf(stderr, " -n <num> answer <num> queries before quitting\n");
+  fprintf(stderr, " -p <port>  listen on a different port (default 53)\n");
   exit(1);
 }
 
@@ -116,10 +119,20 @@ int MAIN(int argc, char *argv[])
   int portnum = 53;
   int sock;
 
-  while((ch = getopt(argc, argv, "1hp:")) != -1) {
+  while((ch = getopt(argc, argv, "1a:hp:")) != -1) {
     switch((char)ch) {
       case '1':
         onceflag = true;
+        break;
+      case 'a':
+        if (*optarg == '\0')
+          usage(argv[0]);
+        strlcpy(address_string, optarg, sizeof(address_string));
+        int res;
+        if ((res = inet_addr(address_string)) < 0) {
+          fprintf(stderr, "bad ip address %s\n", address_string);
+          usage(argv[0]);
+        }
         break;
       case 'h':
         usage(argv[0]);

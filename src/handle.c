@@ -169,7 +169,7 @@ ssize_t handle(uint8_t *buf, ssize_t datasize)
         *(uint16_t *)(buf + newlen) = htons(sizeof(in_addr_t));
         newlen += sizeof(uint16_t);
 
-        *(in_addr_t *)(buf + newlen) = inet_addr("1.2.3.4");
+        *(in_addr_t *)(buf + newlen) = inet_addr(address_string);
         newlen += sizeof(in_addr_t);
     }
 
