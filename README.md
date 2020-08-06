@@ -64,5 +64,76 @@ package, while MacOS homebrew and NetBSD can install `cmocka`.  See the Makefile
 for variables to set if you don't have the includes in /usr/include or
 the library in /usr/lib .
 
-`make test` builds and runs the unit test, and a shell script to run the
+`make test` builds and runs the unit tests, and a shell script to run the
 built binary and query it with `dig`.
+
+```
+slim:riz  ~/dnsfib> make && make test
+COMPILE: src/handle.c
+COMPILE: src/main.c
+COMPILE: src/mysocket.c
+LINK: dnsfib
+tests/test_main
+[==========] Running 3 test(s).
+[ RUN      ] test_null
+[       OK ] test_null
+[ RUN      ] test_main
+header too short, ignoring
+[       OK ] test_main
+[ RUN      ] test_packet_loop
+[       OK ] test_packet_loop
+[==========] 3 test(s) run.
+[  PASSED  ] 3 test(s).
+tests/test_mysocket
+[==========] Running 2 test(s).
+[ RUN      ] test_mysocket_init
+[       OK ] test_mysocket_init
+[ RUN      ] test_mysocket_init_socket_failure
+[       OK ] test_mysocket_init_socket_failure
+[==========] 2 test(s) run.
+[  PASSED  ] 2 test(s).
+tests/test_dnspkt
+[==========] Running 12 test(s).
+[ RUN      ] test_dnspkt_get_id
+[       OK ] test_dnspkt_get_id
+[ RUN      ] test_dnspkt_set_id
+[       OK ] test_dnspkt_set_id
+[ RUN      ] test_dnspkt_get_flags
+[       OK ] test_dnspkt_get_flags
+[ RUN      ] test_dnspkt_set_flags
+[       OK ] test_dnspkt_set_flags
+[ RUN      ] test_dnspkt_get_qdcount
+[       OK ] test_dnspkt_get_qdcount
+[ RUN      ] test_dnspkt_set_qdcount
+[       OK ] test_dnspkt_set_qdcount
+[ RUN      ] test_dnspkt_get_ancount
+[       OK ] test_dnspkt_get_ancount
+[ RUN      ] test_dnspkt_set_ancount
+[       OK ] test_dnspkt_set_ancount
+[ RUN      ] test_dnspkt_get_nscount
+[       OK ] test_dnspkt_get_nscount
+[ RUN      ] test_dnspkt_set_nscount
+[       OK ] test_dnspkt_set_nscount
+[ RUN      ] test_dnspkt_get_arcount
+[       OK ] test_dnspkt_get_arcount
+[ RUN      ] test_dnspkt_set_arcount
+[       OK ] test_dnspkt_set_arcount
+[==========] 12 test(s) run.
+[  PASSED  ] 12 test(s).
+tests/test_handle
+[==========] Running 4 test(s).
+[ RUN      ] test_handle
+[       OK ] test_handle
+[ RUN      ] test_handle_response_set
+[       OK ] test_handle_response_set
+[ RUN      ] test_handle_notimp
+[       OK ] test_handle_notimp
+[ RUN      ] test_q_get_namesize
+[       OK ] test_q_get_namesize
+[==========] 4 test(s) run.
+[  PASSED  ] 4 test(s).
+running test script
+/bin/sh tests/testrun.sh ./dnsfib
+SUCCESS
+slim:riz  ~/dnsfib>
+```
