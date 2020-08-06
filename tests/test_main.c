@@ -52,19 +52,39 @@ ssize_t mock_recvfrom(int s, void * restrict buf, size_t len, int flags,
   return mock();
 }
 
+ssize_t mock_sendto(int s, const void *buf, size_t len, int flags,
+         const struct sockaddr *dest_addr, socklen_t dest_len)
+{
+  return mock();
+}
+
 void mock_err(int status, const char *fmt, ...)
 {
   //function_called();
 }
 
+void mock_warn(const char *fmt, ...)
+{
+
+}
+
+ssize_t mock_handle(uint8_t *buf, ssize_t datasize)
+{
+  function_called();
+  return mock();
+}
+
 #define err mock_err
+#define warn mock_warn
 #define recvfrom mock_recvfrom
+#define sendto mock_sendto
 #define getopt mock_getopt
 #define optarg mock_optarg
 #define getprogname mock_getprogname
 #define exit mock_exit
 #define strtoul mock_strtoul
 #define mysocket_init mock_mysocket_init
+#define handle mock_handle
 
 /* include the code under test */
 #include "../src/main.c"
@@ -91,6 +111,7 @@ void test_main(void **state)
   MAIN(1, argv);
 }
 
+/* this is a valid packet generated with dig(1) */
 uint8_t mock_data[] = { 0xD3, 6, 1, 0x20, 0, 1, 0, 0, 0, 0, 0, 1, 4, 0x74, 0x65, 0x73,
   0x74, 0x09, 0x74, 0x61, 0x73, 0x74, 0x79, 0x6C, 0x69, 0x6D, 0x65, 3, 0x6E, 0x65, 0x74, 00,
   0, 1, 0, 1, 0, 0, 0x29, 0x10, 0, 0, 0, 0, 0, 0, 0 };
@@ -100,6 +121,9 @@ void test_packet_loop(void **state)
   will_return(mock_recvfrom, sizeof(mock_data)); // actual datasize
   will_return(mock_recvfrom, mock_data);
   will_return(mock_recvfrom, sizeof(mock_data)); // return value
+  expect_function_call(mock_handle);
+  will_return(mock_handle, 50); // let's pretend there's a 50-byte response
+  will_return(mock_sendto, 50);
   packet_loop(1);
 }
 
